@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan - Toko Kelontong</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Laporan Transaksi</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="input.html">Input Data</a>
+                <a href="laporan.html">Laporan</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+    <center><h1>Laporan Data</h1></center>
+        
+        <!-- Laporan Stok Produk -->
+        <h2>Stok Produk</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nomor Barang</th>
+                    <th>Nama Barang</th>
+                    <th>Harga</th>
+                    <th>Stok</th>
+                </tr>
+            </thead>
+            <tbody id="stokProduk"></tbody>
+        </table>
+        
+        <!-- Laporan Data Pelanggan -->
+        <h2>Data Pelanggan</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nama Pelanggan</th>
+                    <th>Nomor Barang</th>
+                    <th>Nama Barang</th>
+                </tr>
+            </thead>
+            <tbody id="dataPelanggan"></tbody>
+        </table>
+        
+        <!-- Rekapitulasi Penjualan -->
+        <h2>Rekapitulasi Penjualan</h2>
+        <label>Pilih Periode:
+            <select id="periodeRekap">
+                <option value="harian">Harian</option>
+                <option value="bulanan">Bulanan</option>
+                <option value="tahunan">Tahunan</option>
+            </select>
+        </label>
+        <button onclick="tampilkanRekapitulasi()">Tampilkan</button>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nama Pelanggan</th>
+                    <th>Jumlah Pembelian</th>
+                    <th>Periode</th>
+                </tr>
+            </thead>
+            <tbody id="rekapitulasi"></tbody>
+        </table>
+    </div>
+    
+    <script>
+        function tampilkanStokProduk() {
+            let produk = JSON.parse(localStorage.getItem('produk')) || [];
+            let tbody = document.getElementById('stokProduk');
+            tbody.innerHTML = '';
+            produk.forEach(p => {
+                tbody.innerHTML += `<tr>
+                    <td>${p.nomor}</td>
+                    <td>${p.nama}</td>
+                    <td>${p.harga}</td>
+                    <td>${p.stok}</td>
+                </tr>`;
+            });
+        }
+
+        function tampilkanDataPelanggan() {
+            let pelanggan = JSON.parse(localStorage.getItem('pelanggan')) || [];
+            let tbody = document.getElementById('dataPelanggan');
+            tbody.innerHTML = '';
+            pelanggan.forEach(p => {
+                tbody.innerHTML += `<tr>
+                    <td>${p.nama}</td>
+                    <td>${p.nomorBarang}</td>
+                    <td>${p.namaBarang}</td>
+                </tr>`;
+            });
+        }
+
+        function tampilkanRekapitulasi() {
+            let transaksi = JSON.parse(localStorage.getItem('transaksi')) || [];
+            let periodeDipilih = document.getElementById('periodeRekap').value;
+            let tbody = document.getElementById('rekapitulasi');
+            tbody.innerHTML = '';
+            transaksi.filter(t => t.periode === periodeDipilih).forEach(t => {
+                tbody.innerHTML += `<tr>
+                    <td>${t.pelanggan}</td>
+                    <td>${t.jumlah}</td>
+                    <td>${t.periode}</td>
+                </tr>`;
+            });
+        }
+
+        window.onload = function() {
+            tampilkanStokProduk();
+            tampilkanDataPelanggan();
+        }
+    </script>
+</body>
+</html>

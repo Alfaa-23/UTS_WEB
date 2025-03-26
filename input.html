@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Data - Toko Kelontong</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Laporan Transaksi</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="input.html">Input Data</a>
+                <a href="laporan.html">Laporan</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">    
+        <center><h1>Input Produk</h1></center>
+        <form id="formProduk">
+            <label>Nomor Barang: <input type="text" id="nomorBarang" required></label>
+            <label>Nama Barang: <input type="text" id="namaBarang" required></label>
+            <label>Harga: <input type="number" id="harga" required></label>
+            <label>Stok Tersedia: <input type="number" id="stok" required></label>
+            <button type="button" onclick="simpanProduk()" class="cta-button">Simpan Produk</button>
+        </form>
+        
+        <h2>Input Pelanggan</h2>
+        <form id="formPelanggan">
+            <label>Nama Pelanggan: <input type="text" id="namaPelanggan" required></label>
+            <label>Nomor Barang yang Dibeli: <input type="text" id="nomorBarangPelanggan" required></label>
+            <button type="button" onclick="simpanPelanggan()" class="cta-button">Simpan Pelanggan</button>
+        </form>
+        
+        <h2>Input Transaksi Penjualan</h2>
+        <form id="formTransaksi">
+            <label>Nama Pelanggan: <input type="text" id="namaPelangganTransaksi" required></label>
+            <label>Jumlah Pembelian: <input type="number" id="jumlahPembelian" required></label>
+            <label>Periode:
+                <select id="periode">
+                    <option value="harian">Harian</option>
+                    <option value="bulanan">Bulanan</option>
+                    <option value="tahunan">Tahunan</option>
+                </select>
+            </label>
+            <button type="button" onclick="simpanTransaksi()" class="cta-button">Simpan Transaksi</button>
+        </form>
+    </div>
+    
+    <script>
+        function simpanProduk() {
+            let produk = JSON.parse(localStorage.getItem('produk')) || [];
+            let data = {
+                nomor: document.getElementById('nomorBarang').value,
+                nama: document.getElementById('namaBarang').value,
+                harga: document.getElementById('harga').value,
+                stok: document.getElementById('stok').value
+            };
+            produk.push(data);
+            localStorage.setItem('produk', JSON.stringify(produk));
+            alert('Produk berhasil disimpan!');
+            document.getElementById('formProduk').reset();
+        }
+
+        function simpanPelanggan() {
+            let pelanggan = JSON.parse(localStorage.getItem('pelanggan')) || [];
+            let nomorBarang = document.getElementById('nomorBarangPelanggan').value;
+            let produk = JSON.parse(localStorage.getItem('produk')) || [];
+            let namaBarang = produk.find(p => p.nomor === nomorBarang)?.nama || 'Tidak ditemukan';
+            
+            let data = {
+                nama: document.getElementById('namaPelanggan').value,
+                nomorBarang,
+                namaBarang
+            };
+            pelanggan.push(data);
+            localStorage.setItem('pelanggan', JSON.stringify(pelanggan));
+            alert('Pelanggan berhasil disimpan!');
+            document.getElementById('formPelanggan').reset();
+        }
+
+        function simpanTransaksi() {
+            let transaksi = JSON.parse(localStorage.getItem('transaksi')) || [];
+            let data = {
+                pelanggan: document.getElementById('namaPelangganTransaksi').value,
+                jumlah: document.getElementById('jumlahPembelian').value,
+                periode: document.getElementById('periode').value
+            };
+            transaksi.push(data);
+            localStorage.setItem('transaksi', JSON.stringify(transaksi));
+            alert('Transaksi berhasil disimpan!');
+            document.getElementById('formTransaksi').reset();
+        }
+    </script>
+</body>
+</html>
